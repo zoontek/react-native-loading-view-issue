@@ -2,7 +2,10 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+
+#if __has_include(<React/RCTFabricSurfaceHostingProxyRootView.h>)
 #import <React/RCTFabricSurfaceHostingProxyRootView.h>
+#endif
 
 @implementation AppDelegate
 
@@ -44,7 +47,11 @@
   UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LoadingView" bundle:nil];
   UIView *loadingView = [[storyboard instantiateInitialViewController] view];
 
+#ifdef RCT_NEW_ARCH_ENABLED
   [(RCTFabricSurfaceHostingProxyRootView *)rootView setLoadingView:loadingView];
+#else
+  [(RCTRootView *)rootView setLoadingView:loadingView];
+#endif
 
   return rootView;
 }

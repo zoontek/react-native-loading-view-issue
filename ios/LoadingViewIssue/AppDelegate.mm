@@ -53,6 +53,9 @@
   [(RCTRootView *)rootView setLoadingView:loadingView];
 #endif
 
+  // loadingView.hidden = NO;
+  // [rootView addSubview:loadingView];
+
   return rootView;
 }
 

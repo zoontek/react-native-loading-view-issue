@@ -1,6 +1,8 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
+#import <React/RCTFabricSurfaceHostingProxyRootView.h>
 
 @implementation AppDelegate
 
@@ -10,8 +12,20 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
+  BOOL finished = [super application:application didFinishLaunchingWithOptions:launchOptions];
 
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  RCTFabricSurfaceHostingProxyRootView *rootView = (RCTFabricSurfaceHostingProxyRootView *)self.window.rootViewController.view;
+
+  [[NSNotificationCenter defaultCenter] removeObserver:rootView
+                                                  name:RCTContentDidAppearNotification
+                                                object:rootView];
+
+  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LoadingView" bundle:nil];
+  UIView *loadingView = [[storyboard instantiateInitialViewController] view];
+
+  [rootView setLoadingView:loadingView];
+
+  return finished;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

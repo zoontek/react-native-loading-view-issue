@@ -12,20 +12,7 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-  BOOL finished = [super application:application didFinishLaunchingWithOptions:launchOptions];
-
-  RCTFabricSurfaceHostingProxyRootView *rootView = (RCTFabricSurfaceHostingProxyRootView *)self.window.rootViewController.view;
-
-  [[NSNotificationCenter defaultCenter] removeObserver:rootView
-                                                  name:RCTContentDidAppearNotification
-                                                object:rootView];
-
-  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LoadingView" bundle:nil];
-  UIView *loadingView = [[storyboard instantiateInitialViewController] view];
-
-  [rootView setLoadingView:loadingView];
-
-  return finished;
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
@@ -45,6 +32,21 @@
 - (BOOL)concurrentRootEnabled
 {
   return true;
+}
+
+- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
+                          moduleName:(NSString *)moduleName
+                           initProps:(NSDictionary *)initProps {
+  UIView *rootView = [super createRootViewWithBridge:bridge
+                                          moduleName:moduleName
+                                           initProps:initProps];
+
+  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LoadingView" bundle:nil];
+  UIView *loadingView = [[storyboard instantiateInitialViewController] view];
+
+  [(RCTFabricSurfaceHostingProxyRootView *)rootView setLoadingView:loadingView];
+
+  return rootView;
 }
 
 @end
